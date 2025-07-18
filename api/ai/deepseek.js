@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 module.exports = function(app) {
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || "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";
 
-  async function OpenAi(teks) {
+  async function Deepsek(teks) {
     try {
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
@@ -15,13 +15,11 @@ module.exports = function(app) {
           // "X-Title": ""
         },
         body: JSON.stringify({
-          model: "meta-llama/llama-4-maverick:free",
+          model: "deepseek/deepseek-r1:free",
           messages: [
             {
               role: "user",
-              content: [
-              { type: "text", text: teks }
-              ]
+              content: teks
             }
           ]
         })
@@ -40,7 +38,7 @@ module.exports = function(app) {
     }
   }
 
-  app.get('/ai/openai', async (req, res) => {
+  app.get('/ai/deepseek', async (req, res) => {
     const { text, apikey } = req.query;
 
     if (!text) {
@@ -52,7 +50,7 @@ module.exports = function(app) {
     }
 
     try {
-      const result = await OpenAi(text);
+      const result = await Deepsek(text);
       res.status(200).json({
         status: true,
         result
